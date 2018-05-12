@@ -1,9 +1,9 @@
 # cybertek-bnb-loader
-load students tothe cybertek-bnb-api from an excel sheet
+load students to the cybertek-bnb-api from an excel sheet
 
 
 ## App class
-specify url and path to your excel sheet
+specify url to api app and path to your excel sheet
 
 ## Data
 follow the format as in src/main/resources/MOCK-DATA.xlsx 
