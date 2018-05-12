@@ -1,9 +1,9 @@
 public class App {
     public static void main(String[] args) {
-        String url = "http://localhost:4567";
-        String filePath = "src/main/resources/MOCK_DATA.xlsx";
-        int batchNumber = 11;
+        String url = ConfigurationReader.getProperty("url");
+        String sheetPath = ConfigurationReader.getProperty("sheet-path");
+        int batchNumber = Integer.parseInt(ConfigurationReader.getProperty("batch-number"));
         BatchLoader loader = new BatchLoader(batchNumber, url);
-        loader.load(filePath);
+        loader.load(sheetPath);
     }
 }

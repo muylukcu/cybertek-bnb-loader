@@ -2,7 +2,7 @@
 load students to the cybertek-bnb-api from an excel sheet
 
 
-## App class
+## configurations.properties
 specify url to api app,path to your excel sheet and batch number you'll add to
 
 ## Data
