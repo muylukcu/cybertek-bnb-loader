@@ -28,13 +28,17 @@ public class BatchLoader {
 
     public void load(String filePath) {
         Sheet worksheet = openSheet(filePath);
-
-        List<String> teams = teams();
         Iterator<Row> iterator = worksheet.rowIterator();
         // skip head
         iterator.next();
         int counter = 0;
         logger.debug(format("Total records: %d", worksheet.getPhysicalNumberOfRows()));
+
+        if (!batches().contains(batch))
+            registerBatch();
+
+        List<String> teams = teams();
+        System.out.println(teams());
         while (iterator.hasNext()){
             Student student = parse(iterator.next());
             logger.debug(format("%d: %s", ++counter, student.toString()));
@@ -99,9 +103,18 @@ public class BatchLoader {
         return given().
                     header("Authorization", sign).and().
                 when().
-                    get(url + "/api/teams").
-                    jsonPath().getList("name");
+                    get(url + "/api/batches").
+                    jsonPath().getList(format("find{number=%d}.teams.name", batch));
     }
+
+    private List<Integer> batches() {
+        return given().
+                header("Authorization", sign).and().
+                when().
+                get(url + "/api/batches").
+                jsonPath().getList("number");
+    }
+
 
     private void register(Student student) {
         // /api/students/student?
@@ -132,6 +145,17 @@ public class BatchLoader {
                                 param("batch-number", batch).
                             when().
                                 post(url + "/api/teams/team");
+        logger.debug(response.getBody().asString());
+    }
+
+    private void registerBatch() {
+        // /api/teams/team?
+        // team-name= & batch-number=
+        Response response = given().
+                                header("Authorization", sign).and().
+                                param("batch-number", batch).
+                            when().
+                                post(url + "/api/batches/batch");
         logger.debug(response.getBody().asString());
     }
 }
