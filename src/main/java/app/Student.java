@@ -1,3 +1,5 @@
+package app;
+
 public class Student {
 
     // first_name | last_name | programs | email | phone | city | state | team
@@ -85,7 +87,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
+        return "main.java.app.Student{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", programs='" + programs + '\'' +
