@@ -12,10 +12,11 @@ public class Student {
     private String phone;
     private String team;
     private String role;
+    private String location;
 
     public Student(String firstName, String lastName,
                    String programs, String email, String phone,
-                   String team, String role) {
+                   String team, String role, String location) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.programs = programs;
@@ -23,6 +24,7 @@ public class Student {
         this.phone = phone;
         this.team = team;
         this.role = role;
+        this.location = location;
     }
 
     public String getFirstName() {
@@ -81,6 +83,14 @@ public class Student {
         this.role = role;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public boolean isLocal(){
         return this.programs.contains("ON-CAMPUS");
     }
@@ -95,6 +105,7 @@ public class Student {
                 ", phone='" + phone + '\'' +
                 ", team='" + team + '\'' +
                 ", role='" + role + '\'' +
+                ", location='" + location + '\'' +
                 '}';
     }
 }

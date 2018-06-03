@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import utils.ConfigurationReader;
 
 import static io.restassured.RestAssured.*;
 import static java.lang.String.format;
@@ -86,15 +87,16 @@ public class BatchLoader {
                 row.getCell(3).toString(),
                 row.getCell(4).toString().replace("-",  ""),
                 row.getCell(7).toString(),
-                row.getCell(8).toString()
+                row.getCell(8).toString(),
+                row.getCell(2).toString().split(" ")[1]
         );
     }
 
     // api
     private String sign() {
         return given().
-                    param("email", "admin@mail.com").
-                    param("password", "1111").
+                    param("email", ConfigurationReader.getProperty("admin-email")).
+                    param("password", ConfigurationReader.getProperty("admin-password")).
                 when().
                     get(url + "/sign").
                     jsonPath().
@@ -132,6 +134,7 @@ public class BatchLoader {
                                     param("role", student.getRole()).
                                     param("batch-number", batch).
                                     param("team-name", student.getTeam()).
+                                    param("campus-location", student.getLocation()).
                                 when().
                                     post(url + "/api/students/student");
             logger.debug(response.getBody().asString());
