@@ -7,7 +7,8 @@ public class App {
         String url = ConfigurationReader.getProperty("url");
         String sheetPath = ConfigurationReader.getProperty("sheet-path");
         int batchNumber = Integer.parseInt(ConfigurationReader.getProperty("batch-number"));
-        BatchLoader loader = new BatchLoader(batchNumber, url);
+        String location = ConfigurationReader.getProperty("location");
+        BatchLoader loader = new BatchLoader(batchNumber, location, url);
         loader.load(sheetPath);
     }
 }

@@ -20,12 +20,14 @@ public class BatchLoader {
     private String url;
     private String sign;
     private int batch;
+    private String location;
     private FileInputStream inStream;
 
-    public BatchLoader(int batch, String url) {
+    public BatchLoader(int batch, String location, String url) {
         this.url = url;
         this.sign = sign();
         this.batch = batch;
+        this.location = location;
 
     }
 
@@ -78,17 +80,14 @@ public class BatchLoader {
     }
 
     private Student parse(Row row) {
-        // first_name | last_name | programs | email | phone | city | state | team | role
-        //      0     |     1     |     2    |   3   |   4   |   5  |   6   |  7   |  8
+        // first_name | last_name | email | team name | role |
+        //      0     |     1     |   2   |   3       |   4  |
         return new Student(
                 row.getCell(0).toString(),
                 row.getCell(1).toString(),
                 row.getCell(2).toString(),
-                row.getCell(3).toString(),
-                row.getCell(4).toString().replace("-",  ""),
-                row.getCell(7).toString(),
-                row.getCell(8).toString(),
-                row.getCell(2).toString().split(" ")[1]
+                row.getCell(3).toString().replace(" ", ""),
+                row.getCell(4).toString()
         );
     }
 
@@ -124,21 +123,22 @@ public class BatchLoader {
         // /api/students/student?
         // first-name= &last-name= &email=
         // &password= &role= &batch-number= &team-name=
-        if (student.isLocal()){
-            Response response = given().
-                                    header("Authorization", sign).and().
-                                    param("first-name", student.getFirstName()).
-                                    param("last-name", student.getLastName()).
-                                    param("email", student.getEmail()).
-                                    param("password", student.getPhone()).
-                                    param("role", student.getRole()).
-                                    param("batch-number", batch).
-                                    param("team-name", student.getTeam()).
-                                    param("campus-location", student.getLocation()).
-                                when().
-                                    post(url + "/api/students/student");
-            logger.debug(response.getBody().asString());
-        }
+
+        Response response = given().
+                                header("Authorization", sign).and().
+                                param("first-name", student.getFirstName()).
+                                param("last-name", student.getLastName()).
+                                param("email", student.getEmail()).
+                                param("password", (student.getFirstName().toLowerCase() + student.getLastName().toLowerCase())
+                                                        .replace(" ", "")).
+                                param("role", student.getRole()).
+                                param("batch-number", batch).
+                                param("team-name", student.getTeam().replace(" ", "")).
+                                param("campus-location", location).
+                            when().
+                                post(url + "/api/students/student");
+        logger.debug(response.getBody().asString());
+
     }
 
     private void register(String team) {
@@ -148,6 +148,7 @@ public class BatchLoader {
                                 header("Authorization", sign).and().
                                 param("team-name", team).
                                 param("batch-number", batch).
+                                param("campus-location", location).
                             when().
                                 post(url + "/api/teams/team");
         logger.debug(response.getBody().asString());
